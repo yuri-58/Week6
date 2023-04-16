@@ -30,10 +30,13 @@ public class Card {
 		suit.add("Clubs");
 		return suit;
 	}	
-	public int cardSize() {
-		return 13;
-	}
-	public int suitSize() {
-		return 4;
+	public String describe(int a) {
+		List<String> name = new ArrayList<String>();
+		for(int i = 0; i < cardName(true).size(); i++) {
+			for(int j = 0; j < cardSuit(true).size(); j ++) {
+				name.add(cardName(true).get(i) + " of " + cardSuit(true).get(j));
+			}
+		}
+		return name.get(a);
 	}
 }

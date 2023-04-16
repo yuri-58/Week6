@@ -12,7 +12,7 @@ public class App {
 		boolean isReady = areReady(userResponse);
 		
 		if(isReady) {
-			players.rounds();
+			players.describe();
 		}
 
 	}
