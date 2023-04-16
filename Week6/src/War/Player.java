@@ -7,10 +7,11 @@ import java.util.Scanner;
 
 public class Player {
 	Deck alpha = new Deck();
-		List<String> beta = alpha.shuffleDeck();
+		List<String> beta = alpha.shuffle();
 		List<String> tempP1 = dealCardsPlayer1(beta);
 		List<String> tempP2 = dealCardsPlayer2(beta);
-		int reiterateNum = 0;
+		int incrementScore = 0;
+		int round = 0;
 		int p1Points = 0;
 		int p2Points = 0;
 		
@@ -32,17 +33,9 @@ public class Player {
 		}
 		return tempBeta;
 	}
-	public void rounds() {
-		prog:
-		if(p1Points <= 25 && p2Points <= 25) {
-				if (reiterateNum == 26) {
-					System.out.println("Shuffling hands");
-					shuffleHand(tempP1);
-					shuffleHand(tempP2);
-					reiterateNum = 0;
-					contin();
-					rounds();
-				} else {
+	public void describe() {
+		if(round < 26) {
+					System.out.println("Round " + (round + 1));
 					int a = cardValue(tempP1.get(0));
 					int b = cardValue(tempP2.get(0));
 					System.out.println(tempP1.get(0));
@@ -53,36 +46,39 @@ public class Player {
 						tempP1.remove(0);
 						tempP2.remove(0);
 						p1Points++;
+						round++;
 						roundWinner(1);
 					} else if (a == b) {
-						System.out.println("WAR!");
-						War(a, b);
+						System.out.println("Draw, no points awarded");
+						tempP1.add(tempP1.get(0));
+						tempP2.add(tempP2.get(0));
+						tempP1.remove(0);
+						tempP2.remove(0);
+						round++;
 					} else {
 						tempP2.add(tempP1.get(0));
 						tempP2.add(tempP2.get(0));
 						tempP1.remove(0);
 						tempP2.remove(0);
 						p2Points++;
+						round++;
 						roundWinner(2);
 					}
 					System.out.println("Player 1 has: "+ p1Points +" points ");
 					System.out.println("Player 2 has: "+ p2Points +" points ");
 					contin();
-					rounds();
-				}
-		} else if(p2Points > 25) {
-				System.out.println("!!Player 2 is the Winner!!!");
-				System.out.println("!!Player 2 is the Winner!!!");
+					describe();
+				
+		} else if(p2Points > p1Points) {
 				System.out.println("!!Player 2 is the Winner!!!");
 				System.out.println("Thanks for playing!");
-				break prog;
-		} else if(p1Points > 25) {
-				System.out.println("!!Player 1 is the Winner!!!");
-				System.out.println("!!Player 1 is the Winner!!!");
+		} else if(p1Points > p2Points) {
 				System.out.println("!!Player 1 is the Winner!!!");
 				System.out.println("Thanks for playing!");
-				break prog;
-			} 
+		} else if(p1Points == p2Points) {
+			System.out.println("!!DRAW!!");
+			System.out.println("Thanks for playing!");
+		}
 	}
 	public List<String> shuffleHand(List<String> a) {
 		List<String> tempDelta = new ArrayList<String>();
@@ -103,87 +99,6 @@ public class Player {
 		System.out.println("Press enter to continue ");
 		System.out.println("");
 		String userInput = in.nextLine();
-	}
-	public void War(int a, int b){
-		contin();
-		int cap = 4;
-		if(cardValue(tempP1.get(cap)) > cardValue(tempP2.get(cap))) {
-			for(int k = 0; k < cap; k++) {
-				tempP1.add(tempP2.get(k));
-				tempP1.add(tempP1.get(k));
-				tempP1.remove(0);
-				tempP2.remove(0);
-			}
-				System.out.println(tempP1.get(tempP1.size() - 1));
-				System.out.println(tempP2.get(tempP2.size() - 1));
-				p1Points += 2;
-				roundWinner(1);
-				System.out.println("Player 1 has: "+ p1Points +" points");
-				System.out.println("Player 2 has: "+ p2Points +" points");
-				reiterateNum += 1;
-				contin();
-				rounds();
-		} else if(cardValue(tempP1.get(cap)) < cardValue(tempP2.get(cap))){
-			for(int l = 0; l < cap; l++) {
-				tempP2.add(tempP1.get(l));
-				tempP2.add(tempP2.get(l));
-				tempP1.remove(0);
-				tempP2.remove(0);
-			}
-				System.out.println(tempP1.get(tempP1.size() - 1));
-				System.out.println(tempP2.get(tempP2.size() - 1));
-				p2Points += 2;
-				roundWinner(2);
-				System.out.println("Player 1 has: "+ p1Points +" points");
-				System.out.println("Player 2 has: "+ p2Points +" points");
-				reiterateNum += 1;
-				contin();
-				rounds();
-		} else {
-			System.out.println(tempP1.get(cap));
-			System.out.println(tempP2.get(cap));
-			System.out.println("ANOTHER WAR!");
-			WarCont1(cardValue(tempP1.get(cap)), cardValue(tempP2.get(cap)), cap + 4);
-		}
-	}
-	public void WarCont1(int a, int b, int cap){
-		contin();
-		if(cardValue(tempP1.get(cap)) > cardValue(tempP2.get(cap))) {
-			for(int k = 0; k < cap; k++) {
-				tempP1.add(tempP2.get(k));
-				tempP1.add(tempP1.get(k));
-				tempP1.remove(0);
-				tempP2.remove(0);
-			}
-				System.out.println(tempP1.get(tempP1.size() - 1));
-				System.out.println(tempP2.get(tempP2.size() - 1));
-				p1Points += 3;
-				roundWinner(1);
-				System.out.println("Player 1 has: "+ p1Points +" points");
-				System.out.println("Player 2 has: "+ p2Points +" points");
-				reiterateNum += 2;
-				contin();
-				rounds();
-		} else if(cardValue(tempP1.get(cap)) < cardValue(tempP2.get(cap))){
-			for(int l = 0; l < cap; l++) {
-				tempP2.add(tempP1.get(l));
-				tempP2.add(tempP2.get(l));
-				tempP1.remove(0);
-				tempP2.remove(0);
-			}
-				System.out.println(tempP1.get(tempP1.size() - 1));
-				System.out.println(tempP2.get(tempP2.size() - 1));
-				p2Points += 3;
-				roundWinner(2);
-				System.out.println("Player 1 has: "+ p1Points +" points");
-				System.out.println("Player 2 has: "+ p2Points +" points");
-				reiterateNum += 2;
-				contin();
-				rounds();
-		} else {
-			System.out.println("ANOTHER WAR!");
-			WarCont1(cardValue(tempP1.get(cap)), cardValue(tempP2.get(cap)), cap + 4);
-		}
 	}
 	public int cardValue(String beta) {
 		int a = 0;
@@ -219,10 +134,10 @@ public class Player {
 	public void roundWinner(int a) {
 		if(a == 1) {
 			System.out.println("Winner of this round: Player 1");
-			reiterateNum++;
+			incrementScore++;
 		} else if(a == 2) {
 			System.out.println("Winner of this round: Player 2");
-			reiterateNum++;
+			incrementScore++;
 		} else {
 			System.out.println("Thanks for playing!");
 		}
